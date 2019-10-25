@@ -1,0 +1,529 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node
+{
+    int data;
+    struct Node* next;
+};
+void insertAtEnd(struct Node** head,int d)
+{
+    struct Node* n=(struct Node*)malloc(sizeof(struct Node));
+    n->data=d;
+    n->next=NULL;
+    if(*head==NULL)
+    {
+        *head=n;
+    }
+    else
+    {
+        struct Node* temp=*head;
+        while(temp->next!=NULL)
+        {
+            temp=temp->next;
+        }
+        temp->next=n;
+    }
+}
+
+void deleteAtEnd(struct Node** head)
+{
+    if(*head==NULL)
+        return;
+    else if((*head)->next==NULL)
+    {
+        *head=NULL;
+    }
+    else{
+        struct Node* temp=*head;
+        while(temp->next->next!=NULL)
+        {
+            temp=temp->next;
+        }
+        struct Node* demo=temp->next;
+        temp->next=NULL;
+        free(demo);
+        demo=NULL;
+    }
+}
+
+void insertAtBeg(struct Node** head,int d)
+{
+    struct Node* n=(struct Node*)malloc(sizeof(struct Node));
+    n->data=d;
+    n->next=*head;
+    *head=n;
+}
+
+void deleteAtBeg(struct Node** head)
+{
+    if(*head==NULL)
+        return;
+    else
+    {
+        struct Node* demo=*head;
+        *head=(*head)->next;
+        free(demo);
+        demo=NULL;
+    }
+}
+
+void insertAtIndex(struct Node** head,int pos,int d)
+{
+    struct Node* n=(struct Node*)malloc(sizeof(struct Node));
+    n->data=d;
+    n->next=NULL;
+    if(pos==1)
+    {
+        insertAtBeg(head,d);
+    }
+    else
+    {
+        struct Node* temp=*head;
+        int x=1;
+        while(temp && x<pos-1)
+        {
+            temp=temp->next;
+            x++;
+        }
+        if(temp==NULL)
+        {
+            printf("---invalid position---\n");
+        }
+        else
+        {
+            n->next=temp->next;
+            temp->next=n;
+        }
+    }
+}
+
+void deleteAtIndex(struct Node** head,int pos)
+{
+    if(pos==1)
+        deleteAtBeg(head);
+    else
+    {
+        struct Node* temp=*head;
+        int n=1;
+        while(temp->next && n<pos-1)
+        {
+            temp=temp->next;
+            n++;
+        }
+        if(temp->next==NULL)
+        {
+            printf("---invalid position---\n");
+        }
+        else
+        temp->next=temp->next->next;
+    }
+}
+
+void Reverse(struct Node** head) //reverse the list
+{
+   struct Node* prev=NULL;
+   struct Node* curr=*head;
+   struct Node* next=NULL;
+   if(curr==NULL || curr->next==NULL)
+   {
+      return;
+   }
+   else
+   {
+       next=curr->next;
+       while(curr!=NULL)
+       {
+           curr->next=prev;
+           prev=curr;
+           curr=next;
+           if(curr)
+            next=curr->next;
+       }
+       *head=prev;
+   }
+}
+void SwapAdjacent(struct Node** head)
+{
+    struct Node* first=*head, *second,*prev=NULL;
+    if(!first || !first->next)
+        return;
+    second=first->next;
+    *head=second;
+    while(first!=NULL && second!=NULL)
+    {
+        first->next=first->next->next;
+        second->next=first;
+        prev=first;
+        first=first->next;
+        if(first)
+        {
+           second=first->next;
+            if(second)
+            prev->next=second;
+        }
+    }
+}
+
+struct Node *reversing(struct Node* start,struct Node* end)
+{
+   struct Node* prev=end->next;
+   struct Node* curr=start;
+   struct Node* next=curr->next,*last=end->next;
+
+       while(curr!=NULL && curr!=last)
+       {
+           curr->next=prev;
+           prev=curr;
+           curr=next;
+           if(curr)
+            next=curr->next;
+       }
+       return prev;
+}
+
+struct Node *ReverseByK(struct Node* head,int k) //reverse in the grp of k(method 1)
+{
+    struct Node* ptr1=head;
+    struct Node* ptr2=head;
+    if(!ptr2 || !(ptr2->next))
+        return head;
+    int i=1;
+    while(ptr2->next && i<k)
+    {
+        ptr2=ptr2->next;
+        i++;
+    }
+    if(ptr2->next==NULL)
+    {
+        return reversing(ptr1,ptr2);
+    }
+    ptr2->next=ReverseByK((ptr2->next),k);
+    return reversing(ptr1,ptr2);
+
+}
+
+struct Node* Rev(struct Node* head,int k) // reverse in the grp of k (method 2)
+{
+    struct Node* prev=NULL,*curr=head,*next=NULL;
+    int i=0;
+    while(curr && i<k)
+    {
+        next=curr->next;
+        curr->next=prev;
+        prev=curr;
+        curr=next;
+        i++;
+    }
+    if(next)
+    {
+        head->next=Rev(next,k);
+    }
+    return prev;
+}
+
+int Cyclic(struct Node** head)
+{
+    struct Node* first=head;
+    struct Node* second=head;
+    while(second && second->next)
+    {
+        first=first->next;
+        second=second->next->next;
+        if(first==second)
+            break;
+    }
+    if(!second || !second->next)
+        return 0;
+    else
+        return 1;
+
+}
+
+void SortList(struct Node** head)
+{
+    struct Node* prev=NULL;
+    struct Node* first=*head,*second=*head,*next=NULL;
+    while(second->next)
+    {
+        if(second->next->data < first->data)
+        {
+            next=second->next->next;
+            if(prev)
+            {
+                prev->next=second->next;
+            }
+            else
+            {
+                *head=second->next;
+            }
+            second->next->next=first;
+            second->next=next;
+            first=*head;
+            prev=NULL;
+        }
+        else
+        {
+        while(first!=second)
+        {
+            first=first->next;
+            if(prev==NULL)
+                prev=*head;
+            else
+            prev=prev->next;
+            if(second->next->data < first->data)
+                break;
+        }
+            if(second->next->data < first->data)
+                continue;
+            else
+            {
+                second=second->next;
+                first=*head;
+                prev=NULL;
+            }
+
+        }
+
+    }
+}
+
+/*
+struct Node* makeClone(struct Node** head)
+{
+
+}
+*/
+
+void removeDuplicates(struct Node** head)
+{
+    struct Node* temp=*head;
+    while(temp->next !=NULL)
+    {
+        if(temp->next->data== temp->data)
+        {
+            temp->next=temp->next->next;
+        }
+        else
+        {
+            temp=temp->next;
+        }
+    }
+
+}
+
+void frequency1(struct Node** head) //unique nodes(using dummy variable)
+{
+   struct Node* dummy=(struct Node*)malloc(sizeof(struct Node)),*ptr1,*ptr2;
+   dummy->next=*head;
+   ptr1=dummy;
+   ptr2=*head;
+   while(ptr2 && ptr2->next)
+   {
+       while(ptr2->next && ptr1->next->data==ptr2->next->data)
+        ptr2=ptr2->next;
+       if(ptr1->next==ptr2)
+       {
+           ptr1=ptr1->next;
+       }
+       else
+       {
+           ptr1->next=ptr2->next;
+       }
+       *head=dummy->next;
+       ptr2=ptr1->next;
+   }
+
+}
+
+void uniqueNodes(struct Node **head) //unique nodes(without dummy variable)
+{
+    struct Node *ptr1=*head;
+    struct Node *ptr2=NULL;
+    if(ptr1)
+    ptr2=ptr1->next;
+    while(ptr2)
+    {
+        while(ptr2&&((ptr1->data)==(ptr2->data)))
+        {
+            ptr2=ptr2->next;
+        }
+        if((ptr1->next)==ptr2)
+        {
+           head=&(ptr1->next);
+           ptr1=ptr1->next;
+           ptr2=ptr2->next;
+
+        }
+        else
+        {
+            *head=ptr2;
+            ptr1=ptr2;
+            if(ptr2)
+            ptr2=ptr2->next;
+        }
+    }
+
+}
+
+struct Node* findMiddleNode(struct Node** head)
+{
+    struct Node *f=*head,*s=*head;
+    while(s->next && s->next->next)
+    {
+        f=f->next;
+        s=s->next->next;
+    }
+    return (f);
+}
+
+void breakIntoTwo(struct Node** head,struct Node** h1,struct Node** h2)
+{
+    struct Node* mid=findMiddleNode(head);
+    if(mid->next==NULL)
+        *h2=NULL;
+    else
+    *h2=mid->next;
+    mid->next=NULL;
+}
+
+void Combine(struct Node** h3,struct Node** h1, struct Node** h2) //merging lists
+{
+    //list 1 = 1 2 3
+    //list 2 = 5 4 (rev of 4 5)
+    // res = 1 5 2 4 3
+    struct Node*t1=*h1,*t2=*h2,*t3=*h3;
+    t1=t1->next;
+    while(t1 || t2)
+    {
+        t3->next=t2;
+        t3=t3->next;
+        if(t2)
+        t2=t2->next;
+
+        t3->next=t1;
+        t3=t3->next;
+        if(t1)
+        t1=t1->next;
+    }
+}
+void Print(struct Node** head)
+{
+    struct Node* demo=*head;
+    while(demo!=NULL)
+    {
+        printf("%d ",demo->data);
+        demo=demo->next;
+    }
+}
+int main()
+{
+    struct Node* head=NULL;
+    int size;
+    printf("enter no. of elements u wanna insert initially:\n");
+    scanf("%d",&size);
+    printf("enter elements:\n");
+    int ele;
+    for(int i=0;i<size;i++)
+    {
+        scanf("%d",&ele);
+         insertAtEnd(&head,ele);
+    }
+    printf("Linked List is : ");
+    Print(&head);
+    printf("\n");
+    int num;
+    printf("\nelement u wanna insert at beg : ?\n");
+    scanf("%d",&num);
+    insertAtBeg(&head,num);
+    printf("Linked List is : \n");
+    Print(&head);
+
+    printf("\nelement u wanna insert at end : ?\n");
+    scanf("%d",&num);
+    insertAtEnd(&head,num);
+    printf("Linked List is : \n");
+    Print(&head);
+
+    int pos;
+    printf("\nposition u wanna insert at : \n");
+    scanf("%d",&pos);
+    printf("element u wanna insert : ?\n");
+    scanf("%d",&num);
+    insertAtIndex(&head,pos,num);
+    printf("Linked List is : \n");
+    Print(&head);
+
+    printf("\n----------------------------------------\nDeleting at end:\n");
+    deleteAtEnd(&head);
+    printf("\nLinked List is : \n");
+    Print(&head);
+
+    printf("\n----------------------------------------\nDeleting at begining:\n");
+    deleteAtBeg(&head);
+    printf("\nLinked List is : \n");
+    Print(&head);
+
+    printf("\n-----------------------------------------\nDeleting at position:\n");
+    printf("\nenter the position : ");
+    scanf("%d",&pos);
+    deleteAtIndex(&head,pos);
+    printf("Linked List is : \n");
+    Print(&head);
+
+    printf("\n------------------------------------------\nReversing the list:\n");
+    Reverse(&head);
+    printf("\nLinked List is : \n");
+    Print(&head);
+
+    printf("\n---------------------------------------------\nSwap Adjacent:\n");
+    SwapAdjacent(&head);
+    printf("\nLinked List is : \n");
+    Print(&head);
+
+    printf("\n-------------------------------------------\nReverse in a group of k:\n");
+    printf("\nenter the num by which to reverse:  ");
+    int k;
+    scanf("%d",&k);
+    head=ReverseByK(head,k); // NG method
+    //head=Rev(head,k); // easy method(S)
+    printf("Linked List is : \n");
+    Print(&head);
+
+    printf("\n------------------------------------------------\nUnique nodes with frequency=1 :\n");
+    frequency1(&head); //with dummy
+    //uniqueNodes(&head); //without dummy
+    printf("\nLinked List becomes : \n");
+    Print(&head);
+
+    printf("\n----------------------------------------------\nMiddle node in the list :\n");
+    struct Node* mid=findMiddleNode(&head);
+    printf("%d\n",mid->data);
+
+    printf("\n--------------------------------------\nRemoving Duplicates:\n");
+    removeDuplicates(&head);
+    printf("\nLinked List is : \n");
+    Print(&head);
+
+    struct Node* h1=head,*h2=NULL;
+    printf("\n----------------------------------------\nBreak through middle :\n");
+    breakIntoTwo(&head,&h1,&h2);
+    printf("\nList h1 is : \n");
+    Print(&h1);
+    printf("\n");
+    printf("\nList h2 is : \n");
+    Print(&h2);
+
+    printf("\nReversing the h2 list :");
+    Reverse(&h2);
+    struct Node* h3=h1;
+    printf("\n&\nMerging h1,h2 nodes simultaneously:\n");
+    Combine(&head,&h1,&h2);
+    printf("\nCombined List h3 is : \n");
+    Print(&h3);
+
+    printf("\n--------------------------------------------\nSorting List(Ascending order) :\n");
+    SortList(&head);
+    Print(&head);
+    printf("\n");
+    return 0;
+}
