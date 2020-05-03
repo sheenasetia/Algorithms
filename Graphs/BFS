@@ -1,0 +1,86 @@
+import java.io.*; 
+import java.util.*; 
+  
+
+public class Graphs
+{ 
+    private int V;   
+    private LinkedList<Integer> adj[]; //Adjacency List
+  
+    Graphs(int v) 
+    { 
+        V = v; 
+        adj = new LinkedList[v]; 
+        for (int i=0; i<v; ++i) 
+            adj[i] = new LinkedList(); 
+    } 
+  
+    void addEdge(int v,int w) 
+    { 
+        adj[v].add(w); 
+    } 
+  
+   
+    void BFS(int start) 
+    { 
+        boolean visited[]=new boolean[V];
+        Queue<Integer> q=new LinkedList<>();
+        visited[start]=true;
+        q.add(start);
+        while(q.size()!=0)
+        {
+            int vertex=q.poll();
+            System.out.println(vertex);
+            for(int i=0;i<adj[vertex].size();i++)
+            {
+                int n=adj[vertex].get(i);
+                if(visited[n]==false)
+                {
+                    visited[n]=true;
+                    q.add(n);
+                }
+            }
+            
+            /*
+            
+            Using Iterator:-
+            
+            Iterator<Integer> i = adj[vertex].listIterator(); 
+            while (i.hasNext()) 
+            { 
+                int n = i.next(); 
+                if (!visited[n]) 
+                { 
+                    visited[n] = true; 
+                    queue.add(n); 
+                } 
+            } 
+            
+            */
+            
+        }
+    }
+        
+        
+    public static void main(String args[]) 
+    { 
+        Graphs g = new Graphs(4); 
+  
+        g.addEdge(0, 1); 
+        g.addEdge(0, 2); 
+        g.addEdge(1, 2); 
+        g.addEdge(2, 0); 
+        g.addEdge(2, 3); 
+        g.addEdge(3, 3); 
+  
+        Scanner sc=new Scanner(System.in);
+        
+        int start=sc.nextInt();
+        
+        System.out.println("Following is Breadth First Traversal "+ 
+                           "(starting from vertex "+start+")"); 
+  
+        g.BFS(start);
+        
+    } 
+}
