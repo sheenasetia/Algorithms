@@ -1,0 +1,66 @@
+import java.util.*;
+public class HelloWorld{
+
+    static class Stack {
+     Queue<Integer> queue1;
+     Queue<Integer> queue2;
+     int capacity;
+     int MAX_CAPACITY=20;
+     
+     Stack()
+     {
+         queue1=new LinkedList<Integer>();
+         queue2=new LinkedList<Integer>();
+         capacity=0;
+     }
+     void push(int num)
+     {
+         if(capacity==MAX_CAPACITY)
+         System.out.println("stack is full");
+         queue1.add(num);
+         capacity++;
+         
+         while(!queue2.isEmpty())
+         {
+             queue1.add(queue2.poll());
+         }
+         
+         Queue q=queue1;
+         queue1=queue2;
+         queue2=q;
+         
+     }
+     
+     int top() 
+     { 
+        if (queue2.isEmpty()) 
+            return -1; 
+        return queue2.peek(); 
+     }
+    
+     void pop() 
+     { 
+        if (queue2.isEmpty()) 
+            return; 
+        queue2.remove(); 
+        capacity--; 
+     } 
+     
+    }
+     public static void main(String []args){
+        Stack s=new Stack();
+        s.push(1);
+        s.push(2);
+        s.push(3);
+        s.push(4);
+        s.push(5);
+        System.out.println(s.top());
+        s.pop();
+        System.out.println(s.top());
+        s.pop();
+        System.out.println(s.top());
+        s.pop();
+        System.out.println(s.top());
+        s.pop();
+     }
+}
