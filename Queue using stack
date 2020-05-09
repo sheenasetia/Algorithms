@@ -16,7 +16,7 @@ public class HelloWorld{
      void enqueue(int num)
      {
          if(capacity==MAX_CAPACITY)
-         System.out.println("stack is full");
+         System.out.println("queue is full");
          while(!stack1.empty())
          {
              stack2.push(stack1.pop());
