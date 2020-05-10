@@ -1,0 +1,49 @@
+public class Islands { 
+  
+    boolean isSafe(int M[][], int row, int col, 
+                   boolean visited[][]) 
+    { 
+        int ROW=M.length;
+        int COL=M[0].length;
+        return (row >= 0) && (row < ROW) && (col >= 0) && (col < COL) && (M[row][col] == 1 && !visited[row][col]); 
+    } 
+  
+    void DFS(int M[][], int row, int col, boolean visited[][]) 
+    { 
+        int allowed[][]={ {-1,-1} , {-1,0} , {-1,1} , {0,-1} , {0,1} , {1,-1} , {1,0} , {1,1} };
+        
+        visited[row][col] = true; 
+  
+        for (int k = 0; k < allowed.length; k++) 
+            if (isSafe(M, row+allowed[k][0] , col + allowed[k][1], visited)) 
+                DFS(M, row+allowed[k][0] , col + allowed[k][1], visited); 
+    } 
+ 
+    int countIslands(int M[][],int ROW,int COL) 
+    { 
+        boolean visited[][] = new boolean[ROW][COL]; 
+        int count = 0; 
+        for (int i = 0; i < ROW; ++i) 
+            for (int j = 0; j < COL; ++j) 
+                if (M[i][j] == 1 && !visited[i][j])  
+                {  
+                    DFS(M, i, j, visited); 
+                    count++; 
+                } 
+  
+        return count; 
+    } 
+  
+    public static void main(String[] args) 
+    { 
+        int r,c;
+        r=c=5;
+        int M[][] = new int[][] { { 1, 1, 0, 0, 0 }, 
+                                  { 0, 1, 0, 0, 1 }, 
+                                  { 1, 0, 0, 1, 1 }, 
+                                  { 0, 0, 0, 0, 0 }, 
+                                  { 1, 0, 1, 0, 1 } }; 
+        Islands I = new Islands(); 
+        System.out.println("Number of islands is: " + I.countIslands(M,r,c)); 
+    } 
+} 
